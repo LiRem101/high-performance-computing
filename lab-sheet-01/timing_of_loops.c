@@ -70,10 +70,14 @@ double* bubbleSort_loop(const int *iterations, int size) {
             toSort[j] = rand();
         }
 
-        clock_t start = clock();
-        bubbleSort(toSort, iterations[i]);
-        clock_t end = clock();
-        *(times + i) = (double)(end - start) / CLOCKS_PER_SEC;
+        if(iterations[i] <= 100000) {
+            clock_t start = clock();
+            bubbleSort(toSort, iterations[i]);
+            clock_t end = clock();
+            *(times + i) = (double) (end - start) / CLOCKS_PER_SEC;
+        } else {
+            *(times + i) = -1;
+        }
         free(toSort);
     }
     return times;
@@ -163,9 +167,9 @@ int write_into_file_sorts(char* filename, int n, int* num_elements, double *bubb
 
 
 int main_timing() {
-    int n = 5;
-    int iterations[5] = {1000, 10000, 100000, 1000000, 10000000};
-    int sort_loops[5] = {10, 100, 1000, 10000, 100000};
+    int n = 7;
+    int iterations[7] = {1000, 10000, 100000, 1000000, 5000000, 10000000, 50000000};
+    int sort_loops[7] = {10, 100, 1000, 10000, 100000, 500000, 1000000};
 
     double *simple_times = simple_loop(iterations, n);
     double *sum_times = sum_random(iterations, n);

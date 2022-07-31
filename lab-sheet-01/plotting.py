@@ -10,7 +10,7 @@ def plot_data(results_loops, results_sorting):
     ax1.set_ylabel('Execution Time [seconds]')
     ax1.set_title("Computation Time")
     ax1.legend()
-    ax2.plot(results_sorting[:, 0], results_sorting[:, 1], label='Bubble Sort')
+    ax2.plot(results_sorting[0:5, 0], results_sorting[0:5, 1], label='Bubble Sort')
     ax2.plot(results_sorting[:, 0], results_sorting[:, 2], label='Quick Sort')
     ax2.set_xlabel('Number of Values to Sort')
     ax2.set_ylabel('Execution Time [seconds]')
