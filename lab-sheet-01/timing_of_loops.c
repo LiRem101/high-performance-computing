@@ -75,7 +75,54 @@ double* bubbleSort_loop(const int *iterations, int size) {
         clock_t end = clock();
         *(times + i) = (double)(end - start) / CLOCKS_PER_SEC;
         free(toSort);
-        printf("Bubble sort for %d done.\n", iterations[i]);
+    }
+    return times;
+}
+
+
+int quickSort(int *x, int first, int last){
+    int pivot, j, swapCache, i;
+    if(first < last) {
+        pivot = first;
+        i = first;
+        j = last;
+        while(i < j){
+            while(x[i] <= x[pivot] && i < last)
+                i++;
+            while(x[j] > x[pivot])
+                j--;
+            if(i < j){
+                swapCache = x[i];
+                x[i] = x[j];
+                x[j] = swapCache;
+            }
+        }
+        swapCache=x[pivot];
+        x[pivot]=x[j];
+        x[j]=swapCache;
+        quickSort(x,first,j-1);
+        quickSort(x,j+1,last);
+    }
+    return 0;
+}
+
+
+double* quickSort_loop(const int *iterations, int size) {
+    double *times;
+    times = (double *) malloc(size * sizeof (double));
+    for (int i = 0; i < size; ++i) {
+        srand(time(NULL));
+        int *toSort;
+        toSort = (int *) malloc (iterations[i] * sizeof (int));
+        for (int j = 0; j < *(iterations + i); j++) {
+            toSort[j] = rand();
+        }
+
+        clock_t start = clock();
+        quickSort(toSort, 0, iterations[i]-1);
+        clock_t end = clock();
+        *(times + i) = (double)(end - start) / CLOCKS_PER_SEC;
+        free(toSort);
     }
     return times;
 }
@@ -98,17 +145,17 @@ int write_into_file_loops(char* filename, int n, int* iterations, double *simple
 }
 
 
-int write_into_file_sorts(char* filename, int n, int* num_elements, double *bubbleSort){
+int write_into_file_sorts(char* filename, int n, int* num_elements, double *bubbleSort, double* quickSort){
     FILE *fpt;
     fpt = fopen(filename, "w+");
     if(fpt == NULL){
         printf("Error while creating or opening file %s.\n", filename);
         return 1;
     }
-    fprintf(fpt,"Number_Elements, BubbleSort [seconds]\n");
+    fprintf(fpt,"Number_Elements, BubbleSort [seconds], QuickSort [seconds]\n");
     for (int i = 0; i < n; i++)
     {
-        fprintf(fpt, "%d, %f\n", num_elements[i], bubbleSort[i]);
+        fprintf(fpt, "%d, %f, %f\n", num_elements[i], bubbleSort[i], quickSort[i]);
     }
     fclose(fpt);
     return 0;
@@ -123,11 +170,13 @@ int main_timing() {
     double *simple_times = simple_loop(iterations, n);
     double *sum_times = sum_random(iterations, n);
     double *bubbleSort_times = bubbleSort_loop(sort_loops, n);
+    double *quickSort_times = quickSort_loop(sort_loops, n);
     write_into_file_loops("./lab-sheet-01/Timing.csv", n, iterations, simple_times, sum_times);
-    write_into_file_sorts("./lab-sheet-01/Sorts.csv", n, sort_loops, bubbleSort_times);
+    write_into_file_sorts("./lab-sheet-01/Sorts.csv", n, sort_loops, bubbleSort_times, quickSort_times);
 
     free(simple_times);
     free(sum_times);
     free(bubbleSort_times);
+    free(quickSort_times);
     return 0;
 }
