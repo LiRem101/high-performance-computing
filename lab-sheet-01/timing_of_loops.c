@@ -24,11 +24,11 @@ int main_timing() {
 
     FILE *fpt;
     fpt = fopen("./lab-sheet-01/Timing.csv", "w+");
-    fprintf(fpt,"Iterations, Simple_Loop\n");
+    fprintf(fpt,"Iterations, Simple_Loop [seconds]\n");
 
     for (int i = 0; i < n; i++)
     {
-        printf ("Elapsed: %f seconds\n", times[i]);
+        fprintf(fpt,"%d, %f\n", iterations[i], times[i]);
     }
 
     fclose(fpt);
