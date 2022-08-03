@@ -1,11 +1,14 @@
 #include <time.h>
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 
 double* simple_loop(const int *iterations, int size) {
     double *times;
     times = (double *) malloc (size * sizeof (double));
+    if (times == NULL) {
+        printf("Cannot allocate %lu bytes of memory.\n", size * sizeof (double));
+        exit(EXIT_FAILURE);
+    }
     for (int i = 0; i < size; ++i) {
         clock_t start = clock();
         for (int j = 0; j < *(iterations + i); j++) {
@@ -20,11 +23,19 @@ double* simple_loop(const int *iterations, int size) {
 double* sum_random(const int *iterations, int size) {
     double *times;
     times = (double *) malloc(size * sizeof (double));
+    if (times == NULL) {
+        printf("Cannot allocate %lu bytes of memory.\n", size * sizeof (double));
+        exit(EXIT_FAILURE);
+    }
     for (int i = 0; i < size; ++i) {
 
         srand(time(NULL));
         double *random;
         random = (double *) malloc (iterations[i] * sizeof (double));
+        if (times == NULL) {
+            printf("Cannot allocate %lu bytes of memory.\n", iterations[i] * sizeof (double));
+            exit(EXIT_FAILURE);
+        }
         for (int j = 0; j < *(iterations + i); j++) {
             random[j] = (double)(rand() % 100)/100;
         }
@@ -55,17 +66,25 @@ int bubbleSort(int* toSort, int size){
             }
         }
     }
-    return 0;
+    exit(EXIT_SUCCESS);
 }
 
 
 double* bubbleSort_loop(const int *iterations, int size) {
     double *times;
     times = (double *) malloc(size * sizeof (double));
+    if (times == NULL) {
+        printf("Cannot allocate %lu bytes of memory.\n", size * sizeof (double));
+        exit(EXIT_FAILURE);
+    }
     for (int i = 0; i < size; ++i) {
         srand(time(NULL));
         int *toSort;
         toSort = (int *) malloc (iterations[i] * sizeof (int));
+        if (times == NULL) {
+            printf("Cannot allocate %lu bytes of memory.\n", iterations[i] * sizeof (int));
+            exit(EXIT_FAILURE);
+        }
         for (int j = 0; j < *(iterations + i); j++) {
             toSort[j] = rand();
         }
@@ -107,17 +126,25 @@ int quickSort(int *x, int first, int last){
         quickSort(x,first,j-1);
         quickSort(x,j+1,last);
     }
-    return 0;
+    exit(EXIT_SUCCESS);
 }
 
 
 double* quickSort_loop(const int *iterations, int size) {
     double *times;
     times = (double *) malloc(size * sizeof (double));
+    if (times == NULL) {
+        printf("Cannot allocate %lu bytes of memory.\n", size * sizeof (double));
+        exit(EXIT_FAILURE);
+    }
     for (int i = 0; i < size; ++i) {
         srand(time(NULL));
         int *toSort;
         toSort = (int *) malloc (iterations[i] * sizeof (int));
+        if (times == NULL) {
+            printf("Cannot allocate %lu bytes of memory.\n", iterations[i] * sizeof (int));
+            exit(EXIT_FAILURE);
+        }
         for (int j = 0; j < *(iterations + i); j++) {
             toSort[j] = rand();
         }
@@ -137,7 +164,7 @@ int write_into_file_loops(char* filename, int n, int* iterations, double *simple
     fpt = fopen(filename, "w+");
     if(fpt == NULL){
         printf("Error while creating or opening file %s.\n", filename);
-        return 1;
+        exit(EXIT_FAILURE);
     }
     fprintf(fpt,"Iterations, Simple_Loop [seconds], Sum_Loop [seconds]\n");
     for (int i = 0; i < n; i++)
@@ -145,7 +172,7 @@ int write_into_file_loops(char* filename, int n, int* iterations, double *simple
         fprintf(fpt,"%d, %f, %f\n", iterations[i], simple_loop[i], sum_loop[i]);
     }
     fclose(fpt);
-    return 0;
+    exit(EXIT_SUCCESS);
 }
 
 
@@ -154,7 +181,7 @@ int write_into_file_sorts(char* filename, int n, int* num_elements, double *bubb
     fpt = fopen(filename, "w+");
     if(fpt == NULL){
         printf("Error while creating or opening file %s.\n", filename);
-        return 1;
+        exit(EXIT_FAILURE);
     }
     fprintf(fpt,"Number_Elements, BubbleSort [seconds], QuickSort [seconds]\n");
     for (int i = 0; i < n; i++)
@@ -162,7 +189,7 @@ int write_into_file_sorts(char* filename, int n, int* num_elements, double *bubb
         fprintf(fpt, "%d, %f, %f\n", num_elements[i], bubbleSort[i], quickSort[i]);
     }
     fclose(fpt);
-    return 0;
+    exit(EXIT_SUCCESS);
 }
 
 
@@ -182,5 +209,5 @@ int main_timing() {
     free(sum_times);
     free(bubbleSort_times);
     free(quickSort_times);
-    return 0;
+    exit(EXIT_SUCCESS);
 }
