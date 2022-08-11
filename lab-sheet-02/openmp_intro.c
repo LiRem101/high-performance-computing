@@ -5,6 +5,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "../lab-sheet-01/timing_of_loops.h"
+
 int openmp_helloworld(){
     printf("OpenMP is running with %d threads.\n", omp_get_max_threads());
 
@@ -63,6 +65,7 @@ int add_floating_numbers(){
     }
 
     double localSum = 0;
+    clock_t start = clock();
     #pragma omp parallel private(localSum)
     {
         #pragma omp for
@@ -72,6 +75,8 @@ int add_floating_numbers(){
         printf("localSum of thread %d is %f.\n", omp_get_thread_num(), localSum);
         localSums[omp_get_thread_num()] = localSum;
     }
+    clock_t end = clock();
+    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
 
     localSum = 0;
     for(int i = 0; i < thread_nums; i++){
@@ -85,12 +90,48 @@ int add_floating_numbers(){
     }
     printf("localSum of sequential summation is %f.\n", localSumSeq);
 
-    if(fabs(localSumSeq - localSum) < 0.000001) {
+    if(fabs(localSumSeq - localSum) < 0.0001) {
         printf("Success! Sum of local sums of the treads and sequentially calculated sum is equal!\n");
     } else {
         printf("Error. LocalSums of threads is %f and sequentially calculated sum is %f.\n", localSum, localSumSeq);
     }
+    printf("time spent=%10.6f\n",time_spent);
 
+    free(localSums);
+    free(random);
+
+    return(EXIT_SUCCESS);
+}
+
+int sort_numbers(){
+    int size = 128;
+    int *random;
+    random = (int *) malloc(size * sizeof (int));
+    if (random == NULL) {
+        printf("Cannot allocate %lu bytes of memory.\n", size * sizeof (int));
+        exit(EXIT_FAILURE);
+    }
+    for (int i = 0; i < size; ++i) {
+        srand(time(NULL));
+        random[i] = (int)(rand() % 1000000);
+    }
+    int thread_nums = 4;
+    omp_set_num_threads(thread_nums);
+
+    clock_t start = clock();
+    #pragma omp parallel
+    {
+        #pragma omp for
+        for (int i = 0; i < size; i++){
+            bubbleSort(random, size);
+        }
+    }
+    clock_t end = clock();
+    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Threads done.\n");
+
+    printf("Time spent on sorting=%10.6f\n",time_spent);
+    free(random);
     return(EXIT_SUCCESS);
 }
 
@@ -99,9 +140,10 @@ int main_openmp_intro(){
     return(EXIT_SUCCESS);
 }
 
-/*int main() {
+int main() {
     openmp_helloworld();
     openmp_helloworld_more_threads();
     add_floating_numbers();
+    sort_numbers();
     return(EXIT_SUCCESS);
-}*/
+}

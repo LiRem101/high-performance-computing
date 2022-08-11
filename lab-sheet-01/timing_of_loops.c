@@ -66,7 +66,7 @@ int bubbleSort(int* toSort, int size){
             }
         }
     }
-    exit(EXIT_SUCCESS);
+    return 0;
 }
 
 
