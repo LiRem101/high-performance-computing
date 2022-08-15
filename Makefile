@@ -2,12 +2,12 @@ lab-sheet-01/timing_of_loops.o: lab-sheet-01/timing_of_loops.c lab-sheet-01/timi
 	gcc -c lab-sheet-01/timing_of_loops.c -o lab-sheet-01/timing_of_loops.o
 
 
-lab_02: lab-sheet-02/openmp_intro.c lab-sheet-02/openmp_intro.h
+lab-sheet-02/openmp_intro.o: lab-sheet-02/openmp_intro.c lab-sheet-02/openmp_intro.h
 	gcc -fopenmp -c lab-sheet-02/openmp_intro.c -o lab-sheet-02/openmp_intro.o
 
 
 main.o: main.c lab-sheet-01/timing_of_loops.h lab-sheet-02/openmp_intro.h
-	gcc -c main.c
+	gcc -c main.c -o main.o
 
 
 main: main.o lab-sheet-01/timing_of_loops.o lab-sheet-02/openmp_intro.o

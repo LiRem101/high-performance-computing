@@ -34,6 +34,5 @@ int main(int argc, char *argv[]) {
     } else if (n == 2) {
         main_openmp_intro();
     }
-
     exit(EXIT_SUCCESS);
 }

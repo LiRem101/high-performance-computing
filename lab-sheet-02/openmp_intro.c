@@ -137,13 +137,8 @@ int sort_numbers(){
 
 int main_openmp_intro(){
     openmp_helloworld();
-    return(EXIT_SUCCESS);
-}
-
-int main() {
-    openmp_helloworld();
     openmp_helloworld_more_threads();
     add_floating_numbers();
     sort_numbers();
-    return(EXIT_SUCCESS);
+    return (EXIT_SUCCESS);
 }
